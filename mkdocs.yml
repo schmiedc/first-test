@@ -1,0 +1,11 @@
+site_name: first-test
+site_description: this is a fplugin
+site_author: Christopher Schmied
+
+theme: readthedocs
+
+
+repo_url: https://github.com/schmiedc/first-test
+
+pages:
+- Home: index.md
