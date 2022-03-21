@@ -1,5 +1,19 @@
 import numpy as np
 from first_test import napari_get_reader
+import pytest
+
+
+@pytest.fixture
+def write_im_to_file(tmp_path):
+
+    def write_func(filename):
+        my_test_file = str(tmp_path / "myfile.npy")
+        original_data = np.random.rand(20, 20)
+        np.save(my_test_file, original_data)
+
+        return my_test_file, original_data
+
+    return write_func
 
 
 # tmp_path is a pytest fixture
@@ -23,6 +37,20 @@ def test_reader(tmp_path):
 
     # make sure it's the same as it started
     np.testing.assert_allclose(original_data, layer_data_tuple[0])
+
+
+def test_reader_round_trip(write_im_to_file):
+    my_test_file, original_data = write_im_to_file("myFile.npy")
+
+    reader = napari_get_reader(my_test_file)
+    assert callable(reader)
+
+    layer_data_list = reader(my_test_file)
+    assert isinstance(layer_data_list, list) and len(layer_data_list) > 0
+
+    layer_data_tuple = layer_data_list[0]
+    layer_data = layer_data_tuple[0]
+    np.testing.assert_allclose(layer_data, original_data)
 
 
 def test_get_reader_pass():
