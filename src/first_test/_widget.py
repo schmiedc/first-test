@@ -1,41 +1,32 @@
-"""
-This module is an example of a barebones QWidget plugin for napari
-
-It implements the Widget specification.
-see: https://napari.org/plugins/stable/guides.html#widgets
-
-Replace code below according to your needs.
-"""
-from qtpy.QtWidgets import QWidget, QHBoxLayout, QPushButton
 from magicgui import magic_factory
-
-
-class ExampleQWidget(QWidget):
-    # your QWidget.__init__ can optionally request the napari viewer instance
-    # in one of two ways:
-    # 1. use a parameter called `napari_viewer`, as done here
-    # 2. use a type annotation of 'napari.viewer.Viewer' for any parameter
-    def __init__(self, napari_viewer):
-        super().__init__()
-        self.viewer = napari_viewer
-
-        btn = QPushButton("Click me!")
-        btn.clicked.connect(self._on_click)
-
-        self.setLayout(QHBoxLayout())
-        self.layout().addWidget(btn)
-
-    def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
-
+import napari
+import imageio
 
 @magic_factory
-def example_magic_widget(img_layer: "napari.layers.Image"):
-    print(f"you have selected {img_layer}")
+def flood_magic_factory(
+        img_layer: napari.layers.Image, threshold: float = 0
+) -> napari.types.LayerDataTuple:
+
+    label_image = img_layer.data <= threshold  # get image data from napari image layer and threshold
+    label_image = label_image.astype(int) * 13  # # label 13 is blue in napari
+
+    # create DataTuple
+    label_seg = (label_image, {'name': 'seg'})
+    return label_seg
 
 
-# Uses the `autogenerate: true` flag in the plugin manifest
-# to indicate it should be wrapped as a magicgui to autogenerate
-# a widget.
-def example_function_widget(img_layer: "napari.layers.Image"):
-    print(f"you have selected {img_layer}")
+# for quickly testing the widget
+if __name__ == "__main__":
+    # create a Viewer and add an image here
+    viewer = napari.Viewer()
+
+    # reads in png with imageio as np array
+    test_image = imageio.imread("/home/christopher.schmied/HT_Docs/Projects/2022-03_Hackaton/test_data/island.png")
+
+    # adds numpy array to viewer as image with a name
+    viewer.add_image(test_image, name='Images')
+
+    # adds a widget to the viewer
+    viewer.window.add_dock_widget(flood_magic_factory())
+
+    napari.run()

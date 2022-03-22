@@ -5,44 +5,42 @@ contributions:
     - id: first-test.get_reader
       python_name: first_test._reader:napari_get_reader
       title: Open data with I am a test
+
     - id: first-test.write_multiple
       python_name: first_test._writer:write_multiple
       title: Save multi-layer data with I am a test
+
     - id: first-test.write_single_image
       python_name: first_test._writer:write_single_image
       title: Save image data with I am a test
+
     - id: first-test.make_sample_data
       python_name: first_test._sample_data:make_sample_data
       title: Load sample data from I am a test 
-    - id: first-test.make_qwidget
-      python_name: first_test._widget:ExampleQWidget
-      title: Make example QWidget
-    - id: first-test.make_magic_widget
-      python_name: first_test._widget:example_magic_widget
+
+    - id: first-test.make_flood_magic
+      python_name: first_test._widget:flood_magic_factory
       title: Make example magic widget
-    - id: first-test.make_func_widget
-      python_name: first_test._widget:example_function_widget
-      title: Make example function widget 
+
   readers:
     - command: first-test.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy'] 
+      filename_patterns: ['*.npy']
+
   writers:
     - command: first-test.write_multiple
       layer_types: ['image*','labels*']
       filename_extensions: []
+
     - command: first-test.write_single_image
       layer_types: ['image']
-      filename_extensions: ['.npy'] 
+      filename_extensions: ['.npy']
+
   sample_data:
     - command: first-test.make_sample_data
       display_name: I am a test
-      key: unique_id.1 
+      key: unique_id.1
+
   widgets:
-    - command: first-test.make_qwidget
-      display_name: Example QWidget
-    - command: first-test.make_magic_widget
+    - command: first-test.make_flood_magic
       display_name: Example Magic Widget
-    - command: first-test.make_func_widget
-      autogenerate: true
-      display_name: Example Function Widget 
