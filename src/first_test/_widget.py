@@ -7,12 +7,9 @@ import imageio
 def flood_magic_factory(
         img_layer: napari.layers.Image, threshold: float = 0
 ) -> napari.types.LayerDataTuple:
-    if napari.layers.Image:
-        output_image = thresholding(img_layer.data, threshold)
+    output_image = thresholding(img_layer.data, threshold)
 
-        return output_image
-    else:
-        napari.utils.notifications.Notification("error")
+    return output_image
 
 
 def thresholding(image_data, threshold):
