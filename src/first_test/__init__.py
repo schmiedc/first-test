@@ -6,3 +6,4 @@ from ._reader import napari_get_reader
 from ._writer import write_single_image, write_multiple
 from ._sample_data import make_sample_data
 from ._widget import flood_magic_factory
+from ._widget import thresholding
